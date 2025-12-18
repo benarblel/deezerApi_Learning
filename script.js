@@ -2,8 +2,6 @@
    EXERCICE : DEEZER API + DOM MANIPULATION
    ======================================== */
 
-// const { createElement } = require("react");
-
 // OBJECTIFS :
 // 1. Sélectionner des éléments du DOM
 // 2. Créer un eventListener sur le bouton
@@ -20,44 +18,25 @@
 
 
 // ===== ÉTAPE 1 : SÉLECTIONNER LES ÉLÉMENTS DU DOM =====
-// Bien regarder comment est construit le code HTML
-
-// TODO: Sélectionner le bouton de recherche avec getElementById
 const searchBtn = document.getElementById("search-btn");
 const artistInput = document.getElementById("artist-input");
 const resultsContainer = document.getElementById("results-container");
 const audioPlayer = document.getElementById("audio-player");
 
-// TODO: Sélectionner l'input de recherche
-
-// TODO: Sélectionner le conteneur des résultats
-
-// TODO: Sélectionner l'élément audio pour jouer la musique
-
 // ===== ÉTAPE 2 : CRÉER UN EVENT LISTENER =====
 
-// TODO: Ajouter un addEventListener "click" sur le bouton
 searchBtn.addEventListener("click", () => {
-   // Quand on clique sur le bouton, on appelle la fonction searchArtist()
    searchArtist();
 });
 
-
-
-
 //* ===== ÉTAPE 3 : FONCTION POUR CHERCHER UN ARTISTE =====
 function searchArtist() {
-   // 1. Vider le conteneur avant d'afficher les nouveaux résultats
    resultsContainer.innerHTML = "";
 
-   // 2. Récupérer ce que l'utilisateur a tapé dans l'input
    let artistNameSearch = artistInput.value;
 
-   // 3. Vérifier si artistName est vide
    if (artistNameSearch == "") {
-      //    - Si oui : afficher un message dans le conteneur
       resultsContainer.innerHTML = "Cherche l'artiste.";
-      //    - Puis faire "return;" pour arrêter la fonction
       return;
    }
 
@@ -72,11 +51,8 @@ function searchArtist() {
       .then(data => {
          console.log('Données récupérées avec succès :', data);
 
-         // data.data = tableau de morceaux (tracks)
-         // TODO: Parcourir data.data avec forEach
          data.data.forEach(track => {
-            // Pour chaque track, appeler la fonction afficherTrack(track)
-            afficherTrack(track);
+            displayTrack(track);
          });
 
       })
@@ -86,23 +62,16 @@ function searchArtist() {
 
 
 // ===== ÉTAPE 4 : CRÉER UNE CARTE POUR CHAQUE CHANSON =====
-function afficherTrack(track) {
-   // track = un objet qui représente une chanson
-   // Exemple : track.title, track.artist.name, track.album.cover_medium, track.preview
+function displayTrack(track) {
 
    // 1. Vérifier que track.preview existe (certains morceaux n'ont pas de preview)
    if (!track.preview) {
-      //    Si pas de preview, on ne crée pas de carte.
       return;
    }
 
-   // 2. Créer un élément div pour la carte
    const trackCard = document.createElement("div");
 
-   //    - lui ajouter la classe "track-card"
    trackCard.classList.add("track-card");
-
-   // 3. Ajouter dans le HTML de la carte dans la div avec innerHTML :
 
    trackCard.innerHTML = `
      <div class="cover-container">
@@ -115,15 +84,11 @@ function afficherTrack(track) {
      <p>${track.artist.name}</p>
    `;
 
-   // 4. Ajouter un événement "click" sur la carte
    trackCard.addEventListener("click", function () {
-      //      - changer la source de l'audio (audio.src = track.preview)
       audioPlayer.src = track.preview
-      //      - lancer la lecture (audio.play())
       audioPlayer.play();
    });
 
-   // 5. Ajouter la carte dans le conteneur des résultats
    resultsContainer.appendChild(trackCard);
 }
 
